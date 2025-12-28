@@ -68,4 +68,19 @@ class FuncionesAuxiliares:
             print('Opcion no valida')
             num = input()
         return num
+    
+    def while_int (num):
+        while True:
+            try:
+                num = int(num)
+            except:
+                print('Escriba un numero')
+                num = input()
+            else:
+                break
+            
+        return num
+            
+        
+        
             
