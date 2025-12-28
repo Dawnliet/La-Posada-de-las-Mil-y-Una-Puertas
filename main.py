@@ -1,6 +1,9 @@
+import json
+from pathlib import Path
+
 from core import Operaciones as op
 from core import FuncionesAuxiliares as fa
 
-op.inicio()
 bool_key = op.modo()
-op.opciones_de_modo(bool_key)
+opcion = op.opciones_de_modo(bool_key)
+op.elegir_opcion_modo(opcion)

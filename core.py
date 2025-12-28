@@ -1,11 +1,10 @@
+
 class Operaciones:
     #Una clase para agrupar las distintas pantallas y sus respectivas operaciones
     
-    def inicio():
-        print('En este momento se encuentra en el gestor de eventos de La Posada de las Mil y Una Puertas')
-    
     def modo():
         #Permite entrar en modo administrador o usuario
+        print('En este momento se encuentra en el gestor de eventos de La Posada de las Mil y Una Puertas')
         print("Escriba un numero para elegir una opcion: ")
         print('\n(1) - Entrar en modo administrador')
         print('(2) - Entrar en modo usuario')
@@ -29,10 +28,37 @@ class Operaciones:
         
         if bool_opcion:
             print('(5) - Obtener recursos')
+            num = FuncionesAuxiliares.while_range(input(), '1', '2', '3', '4', '5')
+            return num
         
+        num = FuncionesAuxiliares.while_range(input(), '1', '2', '3', '4')
+        return num
+        
+    def elegir_opcion_modo(num):
+        if num == '1':
+            pass
+        if num == '2':
+            pass
+        if num == '3':
+            Operaciones.crear_evento()
+        if num == '4':
+            pass
+        if num == '5':
+            pass   
+        
+    def salir():
+        print('Ha salido satisfactoriamente')
     
-
+    def crear_evento():
+        print('\nCreando evento')
+        nombre = input('Nombre del evento: ')
+        recursos = []
+        fecha = input("DD/MM/AA: ")
+        
+        print('Confirmar')
+        print('El evento ha sido guardado satisfactoriamente')
     
+         
 class FuncionesAuxiliares:
     # Un conjunto de funciones que validan operaciones
     
@@ -42,17 +68,4 @@ class FuncionesAuxiliares:
             print('Opcion no valida')
             num = input()
         return num
-            
-class Recursos:           
-    def __init__(self, nombre, tipo, cantidad):
-        self.nombre = nombre
-        self.tipo = tipo
-        self.cantidad = cantidad
-        
-    def variar_cantidad(self, bool_opcion, cantidad):
-        #Aumenta o disminuye la cantidad de este recurso
-        if bool_opcion:
-            self.cantidad += cantidad
-        else:
-            self.cantidad -= cantidad
             
