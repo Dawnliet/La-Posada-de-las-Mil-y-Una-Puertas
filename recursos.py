@@ -18,8 +18,8 @@ def crear_recurso():
         path_json = Path(f'recursos/{nombre}.json')
         
         if path_txt.exists():
-            temp = path_txt.read_text().split()
-            temp += '' + nombre
+            temp = path_txt.read_text()
+            temp += ' ' + nombre
             path_txt.write_text(temp)
             
             recurso = json.dumps(recurso)
