@@ -1,5 +1,6 @@
-import core
-from core import FuncionesAuxiliares as FA
+from core import Operaciones as op
+from core import FuncionesAuxiliares as fa
 
-core.inicio()
-bool_key = core.modo()
+op.inicio()
+bool_key = op.modo()
+op.opciones_de_modo(bool_key)
