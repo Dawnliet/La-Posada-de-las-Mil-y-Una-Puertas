@@ -49,15 +49,6 @@ class Operaciones:
     def salir():
         print('Ha salido satisfactoriamente')
     
-    def crear_evento():
-        print('\nCreando evento')
-        nombre = input('Nombre del evento: ')
-        recursos = []
-        fecha = input("DD/MM/AA: ")
-        
-        print('Confirmar')
-        print('El evento ha sido guardado satisfactoriamente')
-    
          
 class FuncionesAuxiliares:
     # Un conjunto de funciones que validan operaciones

@@ -32,5 +32,27 @@ def crear_recurso():
     else:
         crear_recurso()
        
+def lista_recursos():
+    #Muestra en pantalla todos los recursos disponibles
+    path_txt = Path('recursos/recursos.txt')
+    
+    if path_txt.exists():
+        nombres_recursos = path_txt.read_text().split()
+        print('\nLista De Recursos: ')
+        for nombre_recurso in nombres_recursos:
+            path_json = Path(f'recursos/{nombre_recurso}.json')
+            temp = path_json.read_text()
+            temp = json.loads(temp)
+            
+            print(f'\nNombre: {temp['nombre']}')
+            print(f'Tipo: {temp['tipo']}')
+            print(f'Cantidad: {temp['cantidad']}')
+    else:
+        print("No se han encontrado recursos")
 
-crear_recurso()
+def combinaciones_validas(recursos, opciones_necesarias=['a'], opciones=[3]):
+    #Crea combinaciones validas de recursos con sus tipos
+    final_set = set()
+
+
+    
