@@ -2,22 +2,24 @@
 class Operaciones:
     #Una clase para agrupar las distintas pantallas y sus respectivas operaciones
     
-    def modo():
+    def pantalla_seleccion_modo():
         #Permite entrar en modo administrador o usuario
         print('En este momento se encuentra en el gestor de eventos de La Posada de las Mil y Una Puertas')
         print("Escriba un numero para elegir una opcion: ")
         print('\n(1) - Entrar en modo administrador')
         print('(2) - Entrar en modo usuario')
-        print("\nModo: ")
 
+    def seleccionar_modo():
+        print("\nModo: ")
         num = FuncionesAuxiliares.while_range(input(), '1', '2')
+        
         if num == '1':
             print('\nHa entrado en modo administrador')
             return True
         print('\nHa entrado en modo usuario')
         return False
     
-    def opciones_de_modo(bool_opcion):
+    def pantalla_opciones_de_modo(bool_opcion):
         #Muestra las opciones correspondientes de cada modo
         
         print("Escriba un numero para elegir una opcion: ")
@@ -25,18 +27,21 @@ class Operaciones:
         print('(2) - Ver lista de eventos')
         print('(3) - Crear evento')
         print('(4) - Eliminar evento')
-        
         if bool_opcion:
             print('(5) - Obtener recursos')
-            num = FuncionesAuxiliares.while_range(input(), '1', '2', '3', '4', '5')
-            return num
         
-        num = FuncionesAuxiliares.while_range(input(), '1', '2', '3', '4')
-        return num
+    def opciones_validas(bool_opcion):
+        
+        if bool_opcion:
+            num = FuncionesAuxiliares.while_range(input('\nOpcion: '), '1', '2', '3', '4', '5')
+            return num
+        else:
+            num = FuncionesAuxiliares.while_range(input('\nOpcion: '), '1', '2', '3', '4')
+            return num
         
     def elegir_opcion_modo(num):
         if num == '1':
-            pass
+            Operaciones.salir()
         if num == '2':
             pass
         if num == '3':

@@ -32,7 +32,7 @@ def crear_recurso():
     else:
         crear_recurso()
        
-def lista_recursos():
+def listar_recursos():
     #Muestra en pantalla todos los recursos disponibles
     path_txt = Path('recursos/recursos.txt')
     
@@ -50,9 +50,8 @@ def lista_recursos():
     else:
         print("No se han encontrado recursos")
 
-def combinaciones_validas(recursos, opciones_necesarias=['a'], opciones=[3]):
-    #Crea combinaciones validas de recursos con sus tipos
-    final_set = set()
+def seleccionar_recursos():
+    pass
 
 
     
