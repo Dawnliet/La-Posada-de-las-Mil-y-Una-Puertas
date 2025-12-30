@@ -1,3 +1,4 @@
+from recursos import crear_recurso
 
 class Operaciones:
     #Una clase para agrupar las distintas pantallas y sus respectivas operaciones
@@ -49,12 +50,11 @@ class Operaciones:
         if num == '4':
             pass
         if num == '5':
-            pass   
+              crear_recurso()
         
     def salir():
         print('Ha salido satisfactoriamente')
-    
-         
+      
 class FuncionesAuxiliares:
     # Un conjunto de funciones que validan operaciones
     
@@ -77,4 +77,4 @@ class FuncionesAuxiliares:
             
         return num
             
-        
+pass
