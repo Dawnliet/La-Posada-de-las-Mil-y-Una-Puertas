@@ -1,6 +1,3 @@
-import json
-from pathlib import Path
-
 from core import Operaciones as op
 
 op.pantalla_seleccion_modo()

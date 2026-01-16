@@ -1,16 +1,16 @@
 import json
 from pathlib import Path
 
-import core
+import funciones_auxiliares
 
 def crear_recurso():
     nombre = input('Nombre: ')
     tipo = input('Tipo: ')
-    cantidad = core.FuncionesAuxiliares.while_int(input('Cantidad: '))
+    cantidad = funciones_auxiliares.while_int(input('Cantidad: '))
     
     print('\nEscriba (1) para guardar el siguiente recurso o (2) para volver')
     print(f'Nombre: {nombre}\nTipo: {tipo}\nCantidad: {cantidad}')
-    num = core.FuncionesAuxiliares.while_range(input(), '1', '2')
+    num = funciones_auxiliares.while_range(input(), '1', '2')
     
     if num == '1':
         recurso = {'nombre': nombre, 'tipo' : tipo, 'cantidad' : cantidad }
@@ -50,8 +50,4 @@ def listar_recursos():
     else:
         print("No se han encontrado recursos")
 
-def seleccionar_recursos():
-    pass
 
-
-    

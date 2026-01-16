@@ -1,6 +1,7 @@
 from recursos import listar_recursos
 
 def crear_evento():
+    
     nombre = input('Nombre: ')
     descripcion = input('Descripcion: ')
     listar_recursos()
