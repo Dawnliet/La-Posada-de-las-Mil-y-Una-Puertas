@@ -1,4 +1,4 @@
-from core import Operaciones as op
+import core as op
 
 while True:
     
