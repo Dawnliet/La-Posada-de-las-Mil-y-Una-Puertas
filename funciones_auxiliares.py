@@ -1,10 +1,10 @@
 
-def while_range(num, *opciones):
+def while_opciones(element, *opciones):
     #Restringe las opciones para elegir
-    while num not in opciones:
+    while element not in opciones:
         print('Opcion no valida')
-        num = input()
-    return num
+        element = input()
+    return element
     
 def while_int (num):
     #Obliga al usuario a escribir un int
@@ -18,4 +18,11 @@ def while_int (num):
             break
             
     return num
-            
+
+def while_range_int(num, inicio, fin):
+    #Restringe las opciones a un rango numerico
+    while num < inicio or num > fin:
+        print('Opcion no valida')
+        num = input()
+        num = while_int(num)
+    return num       

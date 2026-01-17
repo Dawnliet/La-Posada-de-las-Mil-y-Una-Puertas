@@ -1,5 +1,7 @@
 from recursos import crear_recurso
 import funciones_auxiliares
+from eventos import crear_evento
+from eventos import validar_evento
 
 class Operaciones:
     #Una clase para agrupar las distintas pantallas y sus respectivas operaciones
@@ -14,7 +16,7 @@ class Operaciones:
     def seleccionar_modo():
         #Permite entrar en modo administrador o usuario
         print("\nModo: ")
-        num = funciones_auxiliares.while_range(input(), '1', '2')
+        num = funciones_auxiliares.while_opciones(input(), '1', '2')
         
         if num == '1':
             print('\nHa entrado en modo administrador')
@@ -36,10 +38,10 @@ class Operaciones:
     def opciones_validas(bool_opcion):
         
         if bool_opcion:
-            num = funciones_auxiliares.while_range(input('\nOpcion: '), '1', '2', '3', '4', '5')
+            num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '1', '2', '3', '4', '5')
             return num
         else:
-            num = funciones_auxiliares.while_range(input('\nOpcion: '), '1', '2', '3', '4')
+            num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '1', '2', '3', '4')
             return num
         
     def elegir_opcion_modo(num):
@@ -48,7 +50,7 @@ class Operaciones:
         if num == '2':
             pass
         if num == '3':
-            pass
+            crear_evento(validar_evento())
         if num == '4':
             pass
         if num == '5':
