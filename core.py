@@ -1,7 +1,7 @@
 from recursos import crear_recurso
 import funciones_auxiliares
 from eventos import crear_evento
-from eventos import validar_evento
+from eventos import requisitos_evento
 
 
 def pantalla_seleccion_modo():
@@ -48,7 +48,8 @@ def elegir_opcion_modo(num):
     if num == '2':
         pass
     if num == '3':
-        crear_evento(validar_evento())
+        requisitos = requisitos_evento()
+        crear_evento(requisitos)
     if num == '4':
         pass
     if num == '5':
@@ -56,4 +57,12 @@ def elegir_opcion_modo(num):
         
 def salir():
     print('Ha salido satisfactoriamente')
-  
+
+def preguntar_para_cerrar():
+    print('\nPara salir presione (1), para seguir presione (2)')
+    msg = input()
+    msg = funciones_auxiliares.while_opciones(msg, '1', '2')
+    
+    if msg == '1':
+        return True
+    return False

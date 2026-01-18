@@ -1,3 +1,4 @@
+import datetime
 
 def while_opciones(element, *opciones):
     #Restringe las opciones para elegir
@@ -26,3 +27,19 @@ def while_range_int(num, inicio, fin):
         num = input()
         num = while_int(num)
     return num       
+
+def seleccionar_fecha():
+    
+    while True:
+        print('\nSeleccionar la fecha')
+        day = while_int(input('Dia: '))
+        month = while_int(input('Mes: '))
+        year = while_int(input('Año: '))
+        
+        try:
+            fecha = datetime.date(year, month, day)
+        except:
+            print('Esta fecha no existe en el calendario')
+        else:
+            return str(fecha)
+        
