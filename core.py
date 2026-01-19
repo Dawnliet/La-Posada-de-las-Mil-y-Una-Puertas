@@ -1,7 +1,9 @@
-from recursos import crear_recurso
 import funciones_auxiliares
+from recursos import crear_recurso
+from recursos import listar_recursos
 from eventos import crear_evento
 from eventos import requisitos_evento
+from eventos import ver_lista_eventos
 
 
 def pantalla_seleccion_modo():
@@ -22,34 +24,38 @@ def seleccionar_modo():
     print('\nHa entrado en modo usuario')
     return False
     
-def pantalla_opciones_de_modo(bool_opcion):
+def pantalla_opciones_de_modo(admin):
     #Muestra las opciones correspondientes de cada modo
+    msg_0 = '(0) - Salir'
+    msg_1 = '(1) - Crear evento'
+    msg_2 = '(2) - Ver lista de recursos'
+    msg_3 = '(3) - Ver lista de eventos'
+    msg_4 = '(4) - Eliminar evento'
+    msg_5 = '(5) - Obtener recurso'
+    print(msg_0 + '\n' + msg_1 + '\n' + msg_2 + '\n' + msg_3 + '\n' + msg_4 )
     
-    print("Escriba un numero para elegir una opcion: ")
-    print('\n(1) - Salir')
-    print('(2) - Ver lista de eventos')
-    print('(3) - Crear evento')
-    print('(4) - Eliminar evento')
-    if bool_opcion:
-        print('(5) - Obtener recursos')
+    if admin:
+        print(msg_5)    
     
-def opciones_validas(bool_opcion):
+def opciones_validas(admin):
     
-    if bool_opcion:
-        num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '1', '2', '3', '4', '5')
+    if admin:
+        num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '0', '1', '2', '3', '4', '5')
         return num
     else:
-        num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '1', '2', '3', '4')
+        num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '0', '1', '2', '3', '4')
         return num
     
 def elegir_opcion_modo(num):
-    if num == '1':
-        salir()
-    if num == '2':
+    if num == '0':
         pass
-    if num == '3':
+    if num == '1':
         requisitos = requisitos_evento()
         crear_evento(requisitos)
+    if num == '2':
+        listar_recursos()
+    if num == '3':
+        ver_lista_eventos()
     if num == '4':
         pass
     if num == '5':
@@ -66,3 +72,5 @@ def preguntar_para_cerrar():
     if msg == '1':
         return True
     return False
+
+pantalla_opciones_de_modo(True)

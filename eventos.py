@@ -37,10 +37,33 @@ def requisitos_evento():
         return True
 
 def borrar_evento():
-    pass
+    print('Escriba la fecha del evento que desea eliminar')
+    fecha = seleccionar_fecha()
+    path = Path('eventos/eventos.json')
+    
+    if path.exists():
+        evento = path.read_text()
+        evento = json.loads(evento)
+        evento.pop(fecha, None)
+        evento = json.dumps(evento)
+        path.write_text(evento)
+    else:
+        print('No hay eventos para eliminar')
 
 def ver_lista_eventos():
-    pass
+    path = Path('eventos/eventos.json')
+    eventos = path.read_text()
+    eventos = json.loads(eventos)
+    
+    for fecha, evento in eventos.items():
+        print(f'\nFecha: {fecha}')
+        print(f'Nombre: {evento['nombre']}')
+        print(f'Descripcion: {evento['descripcion']}')
+        print(f'Tipo: {evento['recurso (P)']['subtipo']}')
+        print('Recursos: ')
+        print(f'Persona: {evento['recurso (P)']['nombre']}, ({evento['recurso (P)']['cantidad']})')
+        print(f'Servicio: {evento['recurso (S)']['nombre']}, ({evento['recurso (S)']['cantidad']})')
+        print(f'Objeto: {evento['recurso (O)']['nombre']}, ({evento['recurso (O)']['cantidad']})')
 
 def guardar_evento(path, nuevo_evento, fecha):
     
@@ -56,4 +79,3 @@ def guardar_evento(path, nuevo_evento, fecha):
         
 def validar_evento():
     return True
-

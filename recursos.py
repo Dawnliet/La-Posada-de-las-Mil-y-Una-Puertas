@@ -64,66 +64,26 @@ def seleccionar_recursos_principales(nombre):
     output_recurso = recursos[num]
     
     return output_recurso
-
-def seleccionar_recurso_servicio():
-    path = Path('recursos/servicio.json')
-    servicios = path.read_text()
-    servicios = servicios.splitlines()
-    count = 0
-    
-    print('Seleccionar recurso: ')
-    print('')
-    
-    for servicio in servicios:
-        servicio = json.loads(servicio)
-        print(f'({count}) - {servicio['nombre']} ({servicio['subtipo']})')
-        count += 1
-    
-    num = funciones_auxiliares.while_int(int(input()), 0, count)
-    recurso = servicios[num]
-    recurso = json.loads(recurso)
-    
-    return recurso
-
-def seleccionar_recurso_objeto():
-    path = Path('recursos/objeto.json')
-    objetos = path.read_text()
-    objetos = objetos.split()
-    count = 0
-    recursos = set()
-    
-    print('Seleccionar recursos: ')
-    print('')
-    
-    for objeto in objetos:
-        print(f'({count}) - {objeto['nombre']} ({objeto['subtipo']})')
-        count += 1
-        
-    while True:
-        num = funciones_auxiliares.while_int(int(input()), 0, count)
-        recursos.add(objetos[int(num)])
-        end = input('Para agregar otro objeto presiona q')
-        if end != 'q':
-            break
-    recurso = json.loads(recurso)
-    
-    return recursos
        
 def listar_recursos():
     #Muestra en pantalla todos los recursos disponibles
-    path_txt = Path('recursos/recursos.txt')
+    tipos_principales = ['persona', 'servicio', 'objeto']
     
-    if path_txt.exists():
-        nombres_recursos = path_txt.read_text().split()
-        print('\nLista De Recursos: ')
-        for nombre_recurso in nombres_recursos:
-            path_json = Path(f'recursos/{nombre_recurso}.json')
-            temp = path_json.read_text()
-            temp = json.loads(temp)
-            
-            print(f'\nNombre: {temp['nombre']}')
-            print(f'Tipo: {temp['tipo']}')
-            print(f'Cantidad: {temp['cantidad']}')
-    else:
-        print("No se han encontrado recursos")
+    for tipo in tipos_principales:
+        path = Path(f'recursos/{tipo}.json')
+        
+        if not path.exists():
+            print(f'No existen recursos del tipo principal: {tipo}')
+    
+    for tipo in tipos_principales:
+        path = Path(f'recursos/{tipo}.json')
 
+        if path.exists():
+            lista_recurso = path.read_text()
+            lista_recurso = json.loads(lista_recurso)
+            
+            for recurso in lista_recurso:
+                print(f'\nNombre: {recurso['nombre']}')
+                print(f'Tipo principal: {recurso['tipo principal']}')
+                print (f'Subtipo: {recurso['subtipo']}')
+                print(f'Cantidad: {recurso['cantidad']}')
