@@ -48,7 +48,7 @@ def opciones_validas(admin):
     
 def elegir_opcion_modo(num):
     if num == '0':
-        pass
+        print('Confirme su respuesta')
     if num == '1':
         requisitos = requisitos_evento()
         crear_evento(requisitos)
@@ -72,5 +72,3 @@ def preguntar_para_cerrar():
     if msg == '1':
         return True
     return False
-
-pantalla_opciones_de_modo(True)
