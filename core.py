@@ -66,9 +66,8 @@ def salir():
 
 def preguntar_para_cerrar():
     print('\nPara salir presione (1), para seguir presione (2)')
-    msg = input()
-    msg = funciones_auxiliares.while_opciones(msg, '1', '2')
+    opcion = funciones_auxiliares.while_opciones(input(), '1', '2')
     
-    if msg == '1':
+    if opcion == '1':
         return True
     return False

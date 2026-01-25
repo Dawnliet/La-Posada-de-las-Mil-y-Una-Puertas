@@ -10,6 +10,7 @@ def crear_evento(requisitos):
     
     if requisitos:
         fecha = str(seleccionar_fecha())
+        console_clear()
         nombre = input('Nombre del evento: ')
         descripcion = input('Descripcion: ')
         console_clear()

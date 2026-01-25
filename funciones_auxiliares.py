@@ -50,9 +50,10 @@ def seleccionar_fecha():
         try:
             fecha = datetime.date(year, month, day)
         except:
+            console_clear()
             print('Esta fecha no existe en el calendario')
         else:
-            end = fecha_unica(fecha, path)
+            end = fecha_unica(str(fecha), path)
     
     return fecha
            
