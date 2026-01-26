@@ -10,7 +10,7 @@ def while_opciones(element, *opciones):
         element = input()
     return element
     
-def while_int (num):
+def while_int (num, inicio=None, fin=None):
     #Obliga al usuario a escribir un int
     while True:
         try:
@@ -20,7 +20,19 @@ def while_int (num):
             num = input()
         else:
             break
+    
+    if type(inicio) == int:
+        while num < inicio:
+            console_clear()
+            print('Valor incorrecto')
+            num = while_int(input('\nEscriba un nuevo numero: '), inicio)
             
+    if type(fin) == int:
+        while num > fin:
+            console_clear()
+            print('Valor incorrecto')
+            num = while_int(input('\nEscriba un nuevo numero: '), inicio)
+    
     return num
 
 def while_range_int(num, inicio, fin):
@@ -33,15 +45,14 @@ def while_range_int(num, inicio, fin):
 
 def seleccionar_fecha():
     
-    ok = preguntar_fecha_automatica()
-    if ok:
-        fecha = fecha_automatica()
-        return fecha
-        
     path = Path('eventos/eventos.json')
     end = False
-    
     while not end:
+        ok = preguntar_fecha_automatica()
+        if ok:
+            fecha = fecha_automatica()
+            return fecha
+        
         print('\nSeleccionar la fecha')
         day = while_int(input('Dia: '))
         month = while_int(input('Mes: '))
@@ -54,7 +65,8 @@ def seleccionar_fecha():
             print('Esta fecha no existe en el calendario')
         else:
             end = fecha_unica(str(fecha), path)
-    
+            
+    console_clear()
     return fecha
            
 def fecha_automatica():
@@ -70,7 +82,7 @@ def fecha_automatica():
         set_eventos = set(eventos.keys())
         fecha = datetime.date.today()
         
-        while fecha in set_eventos:
+        while str(fecha) in set_eventos:
             fecha += datetime.timedelta(days=1)
             
         print(f'Fecha seleccionada: {fecha}')    

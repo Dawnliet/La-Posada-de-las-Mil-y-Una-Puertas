@@ -10,7 +10,6 @@ def crear_evento(requisitos):
     
     if requisitos:
         fecha = str(seleccionar_fecha())
-        console_clear()
         nombre = input('Nombre del evento: ')
         descripcion = input('Descripcion: ')
         console_clear()
@@ -23,6 +22,19 @@ def crear_evento(requisitos):
         
         nuevo_evento = {fecha: {'nombre' : nombre, 'descripcion': descripcion, 'recurso (P)': persona, 
                             'recurso (S)': servicio, 'recurso (O)': objeto }}
+        del nuevo_evento[fecha]['recurso (P)']['cantidad']
+        del nuevo_evento[fecha]['recurso (S)']['cantidad']
+        del nuevo_evento[fecha]['recurso (O)']['cantidad']
+        
+        tipos = [nuevo_evento[fecha]['recurso (P)']['subtipo'], nuevo_evento[fecha]['recurso (S)']['subtipo'], 
+                      nuevo_evento[fecha]['recurso (O)']['subtipo']]
+        
+        mismo_tipo = tipos[0]
+        for tipo in tipos:
+            if mismo_tipo != tipo:
+                print('Los recursos principales del evento no son del mismo tipo')
+                return None
+        
         path = Path('eventos/eventos.json')
         ok = confirmar_evento(nuevo_evento)
         
@@ -71,9 +83,9 @@ def ver_lista_eventos():
             print(f'Descripcion: {evento['descripcion']}')
             print(f'Tipo: {evento['recurso (P)']['subtipo']}')
             print('Recursos: ')
-            print(f'Persona: {evento['recurso (P)']['nombre']}, ({evento['recurso (P)']['cantidad']})')
-            print(f'Servicio: {evento['recurso (S)']['nombre']}, ({evento['recurso (S)']['cantidad']})')
-            print(f'Objeto: {evento['recurso (O)']['nombre']}, ({evento['recurso (O)']['cantidad']})')
+            print(f'Persona: {evento['recurso (P)']['nombre']}')
+            print(f'Servicio: {evento['recurso (S)']['nombre']}')
+            print(f'Objeto: {evento['recurso (O)']['nombre']}')
     else:
         print('Actualmente no hay eventos ')
 
@@ -98,9 +110,9 @@ def confirmar_evento(eventos):
         print(f'Descripcion: {evento['descripcion']}')
         print(f'Tipo: {evento['recurso (P)']['subtipo']}')
         print('Recursos: ')
-        print(f'Persona: {evento['recurso (P)']['nombre']}, ({evento['recurso (P)']['cantidad']})')
-        print(f'Servicio: {evento['recurso (S)']['nombre']}, ({evento['recurso (S)']['cantidad']})')
-        print(f'Objeto: {evento['recurso (O)']['nombre']}, ({evento['recurso (O)']['cantidad']})')
+        print(f'Persona: {evento['recurso (P)']['nombre']}')
+        print(f'Servicio: {evento['recurso (S)']['nombre']}')
+        print(f'Objeto: {evento['recurso (O)']['nombre']}')
     
     num = while_opciones(input(), '1', '2')
     if num == '1':

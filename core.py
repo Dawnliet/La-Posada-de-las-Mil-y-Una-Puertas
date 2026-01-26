@@ -4,6 +4,7 @@ from recursos import listar_recursos
 from eventos import crear_evento
 from eventos import requisitos_evento
 from eventos import ver_lista_eventos
+from eventos import borrar_evento
 
 
 def pantalla_seleccion_modo():
@@ -57,7 +58,7 @@ def elegir_opcion_modo(num):
     if num == '3':
         ver_lista_eventos()
     if num == '4':
-        pass
+        borrar_evento()
     if num == '5':
               crear_recurso()
         

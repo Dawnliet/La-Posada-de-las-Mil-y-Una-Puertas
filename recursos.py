@@ -5,9 +5,13 @@ import funciones_auxiliares
 
 def crear_recurso():
     nombre = input('Nombre: ')
+    funciones_auxiliares.console_clear()
     tipo_principal = seleccionar_tipo_principal()
+    funciones_auxiliares.console_clear()
     subtipo = input('Subtipo: ').lower()
-    cantidad = funciones_auxiliares.while_int(input('Cantidad: '))
+    funciones_auxiliares.console_clear()
+    cantidad = funciones_auxiliares.while_int(input('Cantidad: '), 1)
+    funciones_auxiliares.console_clear()
     
     print('\nEscriba (1) para guardar el siguiente recurso o (2) para volver')
     print(f'Nombre: {nombre}\nTipo principal: {tipo_principal}\nSubtipo: {subtipo}\nCantidad: {cantidad}')
@@ -62,6 +66,9 @@ def seleccionar_recursos_principales(nombre):
     num = funciones_auxiliares.while_int(input())
     num = funciones_auxiliares.while_range_int(num, 0, count)
     output_recurso = recursos[num]
+    recursos[num]['cantidad'] -= 1
+    recursos = json.dumps(recursos)
+    path.write_text(recursos)
     
     return output_recurso
        
@@ -87,3 +94,26 @@ def listar_recursos():
                 print(f'Tipo principal: {recurso['tipo principal']}')
                 print (f'Subtipo: {recurso['subtipo']}')
                 print(f'Cantidad: {recurso['cantidad']}')
+
+def validar_recursos():
+    recursos_validos = ['persona', 'servicio', 'objeto']
+    for recurso_valido in recursos_validos:
+        path = Path(f"recursos/{recurso_valido}.json")
+        if path.exists():
+            recursos = path.read_text()
+            recursos = json.loads(recursos)
+            
+            fin = len(recursos) - 1
+            inicio = -1
+            
+            for posicion in range(fin, inicio, -1):
+                recurso = recursos[posicion]
+                if recurso['cantidad'] < 1:
+                    recursos.pop(posicion)
+            
+            if recursos == []:
+                path.unlink()
+            else:
+                recursos = json.dumps(recursos)
+                path.write_text(recursos)
+                
