@@ -44,64 +44,34 @@ def while_range_int(num, inicio, fin):
     return num       
 
 def seleccionar_fecha():
+    #Devuelve una tupla con la fecha inicial y la final
+    print('Fecha inicial')
+    inicial = validar_fecha(datetime.date.today())
+    console_clear()
     
-    path = Path('eventos/eventos.json')
-    end = False
-    while not end:
-        ok = preguntar_fecha_automatica()
-        if ok:
-            fecha = fecha_automatica()
-            return fecha
-        
-        print('\nSeleccionar la fecha')
+    print('Fecha final: ')
+    final = validar_fecha(inicial)
+    return(str(inicial), str(final))
+           
+def validar_fecha(hoy=None):
+    #Funciona hasta que se escriba una fecha correcta
+    while True:
         day = while_int(input('Dia: '))
         month = while_int(input('Mes: '))
         year = while_int(input('Año: '))
-        
         try:
             fecha = datetime.date(year, month, day)
         except:
-            console_clear()
-            print('Esta fecha no existe en el calendario')
+            print('Esta fecha no existe en el calendario. Pruebe otra vez')
         else:
-            end = fecha_unica(str(fecha), path)
-            
-    console_clear()
-    return fecha
-           
-def fecha_automatica():
-    path = Path('eventos/eventos.json')
+            break
     
-    if not path.exists():
-        hoy = datetime.date.today()
-        print(f'Fecha seleccionada: {hoy}')
-        return hoy
-    else:
-        eventos = path.read_text()
-        eventos = json.loads(eventos)
-        set_eventos = set(eventos.keys())
-        fecha = datetime.date.today()
+    if (hoy) and (fecha < hoy):
+        print('Ha habido un error. Recuerde que la fecha de inicio no puede ser antes de hoy, y la final debe ser luego de la de inicio') 
+        fecha = validar_fecha(hoy)   
         
-        while str(fecha) in set_eventos:
-            fecha += datetime.timedelta(days=1)
-            
-        print(f'Fecha seleccionada: {fecha}')    
-        return fecha   
-            
-def fecha_unica(fecha, path):
-    
-    if path.exists():
-        eventos = path.read_text()
-        eventos = json.loads(eventos)
-         
-        for fechas in eventos.keys():
-            if fecha == fechas:
-                print("Esta fecha ya esta ocupada")
-                return False
-        return True
-    
-    else:
-        return True
+    return fecha
+
          
 def preguntar_fecha_automatica():
     

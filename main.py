@@ -1,8 +1,11 @@
 import core 
 from funciones_auxiliares import console_clear
 from recursos import validar_recursos
+from eventos import validar_eventos
 
 validar_recursos()
+validar_eventos()
+console_clear()
 core.pantalla_seleccion_modo()
 modo = core.seleccionar_modo()
 end = False

@@ -116,4 +116,28 @@ def validar_recursos():
             else:
                 recursos = json.dumps(recursos)
                 path.write_text(recursos)
-                
+
+def aumentar_recurso(recurso):
+    tipo = recurso['tipo principal']
+    path = Path(f'recursos/{tipo}.json')     
+    
+    if path.exists():
+        recursos = path.read_text()
+        recursos = json.loads(recursos)
+        
+        for posicion,elemento in enumerate(recursos):
+            if elemento['nombre'] == recurso['nombre']:
+                recursos[posicion]['cantidad'] += 1
+                break
+            else:
+                recurso['cantidad'] = 1
+                recursos.append(recurso)
+        
+        recursos = json.dumps(recursos)
+        path.write_text(recursos)
+        
+    else:
+        recurso['cantidad'] = 1
+        recurso = [recurso]
+        recurso = json.dumps(recurso)
+        path.write_text(recurso)           

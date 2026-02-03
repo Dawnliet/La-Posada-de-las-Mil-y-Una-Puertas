@@ -1,7 +1,9 @@
 import json
+import datetime
 from pathlib import Path
 
 from recursos import seleccionar_recursos_principales
+from recursos import aumentar_recurso
 from funciones_auxiliares import seleccionar_fecha
 from funciones_auxiliares import console_clear
 from funciones_auxiliares import while_opciones
@@ -9,7 +11,7 @@ from funciones_auxiliares import while_opciones
 def crear_evento(requisitos):
     
     if requisitos:
-        fecha = str(seleccionar_fecha())
+        fecha = seleccionar_fecha()
         nombre = input('Nombre del evento: ')
         descripcion = input('Descripcion: ')
         console_clear()
@@ -20,14 +22,14 @@ def crear_evento(requisitos):
         objeto = seleccionar_recursos_principales('objeto')
         console_clear()
         
-        nuevo_evento = {fecha: {'nombre' : nombre, 'descripcion': descripcion, 'recurso (P)': persona, 
+        nuevo_evento = {nombre: {'descripcion': descripcion, 'fecha': fecha,  'recurso (P)': persona, 
                             'recurso (S)': servicio, 'recurso (O)': objeto }}
-        del nuevo_evento[fecha]['recurso (P)']['cantidad']
-        del nuevo_evento[fecha]['recurso (S)']['cantidad']
-        del nuevo_evento[fecha]['recurso (O)']['cantidad']
+        del nuevo_evento[nombre]['recurso (P)']['cantidad']
+        del nuevo_evento[nombre]['recurso (S)']['cantidad']
+        del nuevo_evento[nombre]['recurso (O)']['cantidad']
         
-        tipos = [nuevo_evento[fecha]['recurso (P)']['subtipo'], nuevo_evento[fecha]['recurso (S)']['subtipo'], 
-                      nuevo_evento[fecha]['recurso (O)']['subtipo']]
+        tipos = [nuevo_evento[nombre]['recurso (P)']['subtipo'], nuevo_evento[nombre]['recurso (S)']['subtipo'], 
+                      nuevo_evento[nombre]['recurso (O)']['subtipo']]
         
         mismo_tipo = tipos[0]
         for tipo in tipos:
@@ -39,9 +41,12 @@ def crear_evento(requisitos):
         ok = confirmar_evento(nuevo_evento)
         
         if ok:
-            guardar_evento(path, nuevo_evento, fecha)
+            guardar_evento(path, nuevo_evento, nombre)
         else:
             print('No se ha guardado el evento')
+            aumentar_recurso(nuevo_evento['recurso (P)'])
+            aumentar_recurso(nuevo_evento['recurso (S)'])
+            aumentar_recurso(nuevo_evento['recurso (O)'])
         
     else:
         print('Actualmente no se pueden crear eventos por falta de recursos principales')
@@ -55,17 +60,30 @@ def requisitos_evento():
             return False
         return True
 
-def borrar_evento():
-    print('Escriba la fecha del evento que desea eliminar')
-    fecha = seleccionar_fecha()
+def borrar_evento(nombre=None):
+    #Elimina un evento y permite utilizar sus recursos
     path = Path('eventos/eventos.json')
     
+    if not nombre:
+        print('Escriba el nombre del evento que desea eliminar')
+        nombre = input('Nombre: ')  
+        
     if path.exists():
-        evento = path.read_text()
-        evento = json.loads(evento)
-        evento.pop(fecha, None)
-        evento = json.dumps(evento)
-        path.write_text(evento)
+        eventos = path.read_text()
+        eventos = json.loads(eventos)
+        
+        try:
+            eventos[nombre]
+        except:
+            print('No existe evento con ese nombre')
+        else:
+            aumentar_recurso(eventos[nombre]['recurso (P)'])
+            aumentar_recurso(eventos[nombre]['recurso (S)'])
+            aumentar_recurso(eventos[nombre]['recurso (O)'])
+        
+            eventos.pop(nombre, None)
+            eventos = json.dumps(eventos)
+            path.write_text(eventos)
     else:
         print('No hay eventos para eliminar')
 
@@ -89,12 +107,12 @@ def ver_lista_eventos():
     else:
         print('Actualmente no hay eventos ')
 
-def guardar_evento(path, nuevo_evento, fecha):
+def guardar_evento(path, nuevo_evento, nombre):
     
     if path.exists():
         eventos = path.read_text()
         eventos = json.loads(eventos)
-        eventos [fecha] = nuevo_evento[fecha]
+        eventos [nombre] = nuevo_evento[nombre]
         eventos = json.dumps(eventos)
         path.write_text(eventos)
     else:
@@ -103,10 +121,10 @@ def guardar_evento(path, nuevo_evento, fecha):
         
 def confirmar_evento(eventos):
     print('\nPresione (1) para guardar este evento o (2) para cancelar')
-    for fecha,evento in eventos.items():
+    for nombre,evento in eventos.items():
         
-        print(f'\nFecha: {fecha}')
-        print(f'Nombre del evento: {evento['nombre']}')
+        print(f'\nFecha: {evento['fecha']}')
+        print(f'Nombre del evento: {nombre}')
         print(f'Descripcion: {evento['descripcion']}')
         print(f'Tipo: {evento['recurso (P)']['subtipo']}')
         print('Recursos: ')
@@ -118,3 +136,17 @@ def confirmar_evento(eventos):
     if num == '1':
         return True
     return False
+
+def validar_eventos():
+    path = Path('eventos/eventos.json')
+    eventos = path.read_text()
+    eventos = json.loads(eventos)
+    nombres = []
+    
+    for nombre, evento in eventos.items():
+        fecha = datetime.date.fromisoformat (evento['fecha'][1])
+        if fecha < datetime.date.today():
+            nombres.append(nombre)
+            
+    for nombre in nombres[::-1]:
+        borrar_evento(nombre)
