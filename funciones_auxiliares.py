@@ -1,7 +1,5 @@
 import datetime
 import os
-import json
-from pathlib import Path
 
 def while_opciones(element, *opciones):
     #Restringe las opciones para elegir
@@ -11,7 +9,7 @@ def while_opciones(element, *opciones):
     return element
     
 def while_int (num, inicio=None, fin=None):
-    #Obliga al usuario a escribir un int
+    #Obliga al usuario a escribir un int. Dicho int debe ser mayor a inicio y/o menor a fin en caso de que se especifiquen
     while True:
         try:
             num = int(num)
@@ -34,17 +32,9 @@ def while_int (num, inicio=None, fin=None):
             num = while_int(input('\nEscriba un nuevo numero: '), inicio)
     
     return num
-
-def while_range_int(num, inicio, fin):
-    #Restringe las opciones a un rango numerico
-    while num < inicio or num > fin:
-        print('Opcion no valida')
-        num = input()
-        num = while_int(num)
-    return num       
-
+     
 def seleccionar_fecha():
-    #Devuelve una tupla con la fecha inicial y la final
+    #Devuelve una tupla con la fecha inicial y la final, ambas en formato str
     print('Fecha inicial')
     inicial = validar_fecha(datetime.date.today())
     console_clear()
@@ -54,10 +44,10 @@ def seleccionar_fecha():
     return(str(inicial), str(final))
            
 def validar_fecha(hoy=None):
-    #Funciona hasta que se escriba una fecha correcta
+    #Funciona hasta que se escriba una fecha correcta y luego la devuelve
     while True:
-        day = while_int(input('Dia: '))
-        month = while_int(input('Mes: '))
+        day = while_int(input('Dia: '), 1, 31)
+        month = while_int(input('Mes: '), 1, 12)
         year = while_int(input('Año: '))
         try:
             fecha = datetime.date(year, month, day)
@@ -71,16 +61,30 @@ def validar_fecha(hoy=None):
         fecha = validar_fecha(hoy)   
         
     return fecha
-
-         
-def preguntar_fecha_automatica():
-    
-    print('\n Escriba (1) para seleccionar la fecha de manera automática. (2) Para seguir')
-    num = while_opciones(input(), '1', '2')
-    if num == '1':
-        return True
-    return False
          
 def console_clear():
     os.system('cls')       
+  
+def no_encontrado(recurso):
+    if not recurso:
+        return True
 
+def fecha_inteligente(*recursos):
+    fechas = []
+    output_fecha = 0
+    
+    for recurso in recursos:
+        if type(recurso) == tuple:
+            fechas.append(datetime.date.fromisoformat(recurso[1]))
+            
+    try:
+        output_fecha = max(fechas)
+    except:
+        fecha_inicial = str(datetime.date.today())
+        fecha_final = str(validar_fecha(fecha_inicial))
+        return (fecha_inicial, fecha_final)
+    else:
+        fecha_inicial = output_fecha + datetime.timedelta(days=1)
+        fecha_final = validar_fecha(fecha_inicial)
+        return (fecha_inicial, fecha_final)
+            

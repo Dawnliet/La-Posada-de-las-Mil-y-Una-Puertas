@@ -5,6 +5,7 @@ from eventos import crear_evento
 from eventos import requisitos_evento
 from eventos import ver_lista_eventos
 from eventos import borrar_evento
+from eventos import crear_evento_inteligente
 
 
 def pantalla_seleccion_modo():
@@ -32,43 +33,47 @@ def pantalla_opciones_de_modo(admin):
     msg_2 = '(2) - Ver lista de recursos'
     msg_3 = '(3) - Ver lista de eventos'
     msg_4 = '(4) - Eliminar evento'
-    msg_5 = '(5) - Obtener recurso'
-    print(msg_0 + '\n' + msg_1 + '\n' + msg_2 + '\n' + msg_3 + '\n' + msg_4 )
+    msg_5 = '(5) - Crear evento inteligente'
+    msg_6 = '(6) - Obtener recurso'
+    
+    print(msg_0 + '\n' + msg_1 + '\n' + msg_2 + '\n' + msg_3 + '\n' + msg_4 + '\n' + msg_5)
     
     if admin:
-        print(msg_5)    
+        print(msg_6)    
     
 def opciones_validas(admin):
     
     if admin:
-        num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '0', '1', '2', '3', '4', '5')
+        num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '0', '1', '2', '3', '4', '5', '6')
         return num
     else:
-        num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '0', '1', '2', '3', '4')
+        num = funciones_auxiliares.while_opciones(input('\nOpcion: '), '0', '1', '2', '3', '4', '5')
         return num
     
 def elegir_opcion_modo(num):
     if num == '0':
         print('Confirme su respuesta')
-    if num == '1':
+    elif num == '1':
         requisitos = requisitos_evento()
         crear_evento(requisitos)
-    if num == '2':
+    elif num == '2':
         listar_recursos()
-    if num == '3':
+    elif num == '3':
         ver_lista_eventos()
-    if num == '4':
+    elif num == '4':
         borrar_evento()
-    if num == '5':
-              crear_recurso()
-        
+    elif num == '5':
+        crear_evento_inteligente()
+    elif num == '6':
+        crear_recurso()
+    
 def salir():
     print('Ha salido satisfactoriamente')
 
 def preguntar_para_cerrar():
-    print('\nPara salir presione (1), para seguir presione (2)')
+    print('\nPara seguir presione (1), para salir presione (2)')
     opcion = funciones_auxiliares.while_opciones(input(), '1', '2')
     
-    if opcion == '1':
+    if opcion == '2':
         return True
     return False

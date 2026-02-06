@@ -4,14 +4,17 @@ from pathlib import Path
 
 from recursos import seleccionar_recursos_principales
 from recursos import aumentar_recurso
+from recursos import buscar_recurso_principal
+from recursos import recursos_validos
 from funciones_auxiliares import seleccionar_fecha
 from funciones_auxiliares import console_clear
 from funciones_auxiliares import while_opciones
+from funciones_auxiliares import no_encontrado
+from funciones_auxiliares import fecha_inteligente
 
 def crear_evento(requisitos):
     
     if requisitos:
-        fecha = seleccionar_fecha()
         nombre = input('Nombre del evento: ')
         descripcion = input('Descripcion: ')
         console_clear()
@@ -21,12 +24,10 @@ def crear_evento(requisitos):
         console_clear()
         objeto = seleccionar_recursos_principales('objeto')
         console_clear()
+        fecha = seleccionar_fecha()
         
         nuevo_evento = {nombre: {'descripcion': descripcion, 'fecha': fecha,  'recurso (P)': persona, 
                             'recurso (S)': servicio, 'recurso (O)': objeto }}
-        del nuevo_evento[nombre]['recurso (P)']['cantidad']
-        del nuevo_evento[nombre]['recurso (S)']['cantidad']
-        del nuevo_evento[nombre]['recurso (O)']['cantidad']
         
         tipos = [nuevo_evento[nombre]['recurso (P)']['subtipo'], nuevo_evento[nombre]['recurso (S)']['subtipo'], 
                       nuevo_evento[nombre]['recurso (O)']['subtipo']]
@@ -37,17 +38,12 @@ def crear_evento(requisitos):
                 print('Los recursos principales del evento no son del mismo tipo')
                 return None
         
-        path = Path('eventos/eventos.json')
         ok = confirmar_evento(nuevo_evento)
-        
         if ok:
-            guardar_evento(path, nuevo_evento, nombre)
+            guardar_evento(nuevo_evento, nombre)
         else:
             print('No se ha guardado el evento')
-            aumentar_recurso(nuevo_evento['recurso (P)'])
-            aumentar_recurso(nuevo_evento['recurso (S)'])
-            aumentar_recurso(nuevo_evento['recurso (O)'])
-        
+
     else:
         print('Actualmente no se pueden crear eventos por falta de recursos principales')
 
@@ -81,23 +77,23 @@ def borrar_evento(nombre=None):
             aumentar_recurso(eventos[nombre]['recurso (S)'])
             aumentar_recurso(eventos[nombre]['recurso (O)'])
         
-            eventos.pop(nombre, None)
+            eventos.pop(nombre)
             eventos = json.dumps(eventos)
             path.write_text(eventos)
     else:
         print('No hay eventos para eliminar')
 
 def ver_lista_eventos():
-    
     path = Path('eventos/eventos.json')
+    
     if path.exists():
-        
         eventos = path.read_text()
         eventos = json.loads(eventos)
 
-        for fecha, evento in eventos.items():
-            print(f'\nFecha: {fecha}')
-            print(f'Nombre del evento: {evento['nombre']}')
+        for nombre, evento in eventos.items():
+            print(f'\nFecha inicial: {evento['fecha'][0]}')
+            print(f'Fecha final: {evento['fecha'][1]}')
+            print(f'Nombre del evento: {nombre}')
             print(f'Descripcion: {evento['descripcion']}')
             print(f'Tipo: {evento['recurso (P)']['subtipo']}')
             print('Recursos: ')
@@ -107,8 +103,8 @@ def ver_lista_eventos():
     else:
         print('Actualmente no hay eventos ')
 
-def guardar_evento(path, nuevo_evento, nombre):
-    
+def guardar_evento(nuevo_evento, nombre):
+    path = Path('eventos/eventos.json')
     if path.exists():
         eventos = path.read_text()
         eventos = json.loads(eventos)
@@ -119,11 +115,16 @@ def guardar_evento(path, nuevo_evento, nombre):
         nuevo_evento = json.dumps(nuevo_evento)
         path.write_text(nuevo_evento)
         
+    aumentar_recurso(nuevo_evento[nombre]['recurso (P)'])
+    aumentar_recurso(nuevo_evento[nombre]['recurso (S)'])
+    aumentar_recurso(nuevo_evento[nombre]['recurso (O)'])
+        
 def confirmar_evento(eventos):
     print('\nPresione (1) para guardar este evento o (2) para cancelar')
     for nombre,evento in eventos.items():
         
-        print(f'\nFecha: {evento['fecha']}')
+        print(f'\nFecha inicial: {evento['fecha'][0]}')
+        print(f'Fecha final: {evento['fecha'][1]}')
         print(f'Nombre del evento: {nombre}')
         print(f'Descripcion: {evento['descripcion']}')
         print(f'Tipo: {evento['recurso (P)']['subtipo']}')
@@ -150,3 +151,43 @@ def validar_eventos():
             
     for nombre in nombres[::-1]:
         borrar_evento(nombre)
+    
+def crear_evento_inteligente():
+    msg = 'El recurso especificado no existe. Evento cancelado'
+    nombre = input('Nombre del evento: ')
+    descripcion = input('Descripción: ')
+    persona = buscar_recurso_principal('persona', "recurso (P)")
+    if no_encontrado(persona):
+        print(msg)
+        return None
+    servicio = buscar_recurso_principal('servicio', "recurso (S)")
+    if no_encontrado(servicio):
+        print(msg)
+        return None
+    objeto = buscar_recurso_principal('objeto', "recurso (O)")
+    if no_encontrado(objeto):
+        print(msg)
+        return None
+    fecha = fecha_inteligente(persona, servicio, objeto)
+    
+    lista_de_recursos = [persona, servicio, objeto]
+    persona, servicio, objeto = recursos_validos(lista_de_recursos)
+    
+    nuevo_evento = {nombre: {'descripcion': descripcion, 'fecha': fecha,  'recurso (P)': persona, 
+                            'recurso (S)': servicio, 'recurso (O)': objeto }}
+        
+    tipos = [nuevo_evento[nombre]['recurso (P)']['subtipo'], nuevo_evento[nombre]['recurso (S)']['subtipo'], 
+                      nuevo_evento[nombre]['recurso (O)']['subtipo']]
+        
+    mismo_tipo = tipos[0]
+    for tipo in tipos:
+        if mismo_tipo != tipo:
+            print('Los recursos principales del evento no son del mismo tipo')
+            return None
+        
+    ok = confirmar_evento(nuevo_evento)
+    if ok:
+        guardar_evento(nuevo_evento, nombre)
+    else:
+        print('No se ha guardado el evento')
+        
