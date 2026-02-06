@@ -14,7 +14,7 @@ def crear_recurso():
     funciones_auxiliares.console_clear()
     planificado = False
     
-    print('\nEscriba (1) para guardar el siguiente recurso o (2) para volver')
+    print('\nEscriba (1) para guardar el siguiente recurso o (2) para empezar nuevamente')
     print(f'Nombre: {nombre}\nTipo principal: {tipo_principal}\nSubtipo: {subtipo}\nCantidad: {cantidad}')
     num = funciones_auxiliares.while_opciones(input(), '1', '2')
     
@@ -115,29 +115,50 @@ def validar_recursos():
                 recursos = json.dumps(recursos)
                 path.write_text(recursos)
 
-def aumentar_recurso(recurso): 
+def sumar_restar_recurso(recurso, operacion): 
+    #Aumenta o disminuye un recurso dependiendo del valor de operacion
     tipo = recurso['tipo principal']
     path = Path(f'recursos/{tipo}.json')     
-    if path.exists():
-        recursos = path.read_text()
-        recursos = json.loads(recursos)
-        
-        for posicion,elemento in enumerate(recursos):
-            if elemento['nombre'] == recurso['nombre']:
-                recursos[posicion]['cantidad'] += 1
-                break
-            else:
+    
+    if operacion == 'mas':
+        encontrado = False
+        if path.exists():
+            recursos = path.read_text()
+            recursos = json.loads(recursos)
+
+            for posicion,elemento in enumerate(recursos):
+                if elemento['nombre'] == recurso['nombre']:
+                    recursos[posicion]['cantidad'] += 1
+                    encontrado = True
+                    break
+                
+            if not encontrado:
                 recurso['cantidad'] = 1
                 recursos.append(recurso)
-                
-        recursos = json.dumps(recursos)
-        path.write_text(recursos)
-    else:
-        recurso['cantidad'] = 1
-        recurso = [recurso]
-        recurso = json.dumps(recurso)
-        path.write_text(recurso)           
+            
+            recursos = json.dumps(recursos)
+            path.write_text(recursos)
+            
+        else:
+            recurso['cantidad'] = 1
+            recurso = [recurso]
+            recurso = json.dumps(recurso)
+            path.write_text(recurso)    
+                 
+    elif operacion == 'menos':
+        if path.exists():
+            recursos = path.read_text()
+            recursos = json.loads(recursos)
 
+            for posicion, elemento in enumerate(recursos):
+                    if elemento['nombre'] == recurso['nombre']:
+                        recursos[posicion]['cantidad'] -= 1
+                        encontrado = True
+                        break
+                    
+            recursos = json.dumps(recursos)
+            path.write_text(recursos)
+        
 def buscar_recurso_principal(tipo, tipo_evento):
     #Revisa los .json para sacar cada recurso. De no existir dicho recurso revisa en los eventos creados; y de lo contrario devuelve un 
     #mensaje donde explica que dicho recurso no existe
@@ -155,10 +176,10 @@ def buscar_recurso_principal(tipo, tipo_evento):
             if recurso['nombre'] == nombre:
                 return recurso
         
-    eventos = path_eventos.read_text()
-    eventos = json.loads(eventos)
-        
     if path_eventos.exists():
+        eventos = path_eventos.read_text()
+        eventos = json.loads(eventos)
+        
         for nombres, evento in eventos.items():
             if evento[f'{tipo_evento}']['nombre'] == nombre:
                 recurso = evento[f'{tipo_evento}']

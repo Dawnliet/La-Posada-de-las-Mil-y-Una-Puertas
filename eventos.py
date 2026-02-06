@@ -3,7 +3,7 @@ import datetime
 from pathlib import Path
 
 from recursos import seleccionar_recursos_principales
-from recursos import aumentar_recurso
+from recursos import sumar_restar_recurso
 from recursos import buscar_recurso_principal
 from recursos import recursos_validos
 from funciones_auxiliares import seleccionar_fecha
@@ -24,19 +24,18 @@ def crear_evento(requisitos):
         console_clear()
         objeto = seleccionar_recursos_principales('objeto')
         console_clear()
-        fecha = seleccionar_fecha()
         
-        nuevo_evento = {nombre: {'descripcion': descripcion, 'fecha': fecha,  'recurso (P)': persona, 
-                            'recurso (S)': servicio, 'recurso (O)': objeto }}
-        
-        tipos = [nuevo_evento[nombre]['recurso (P)']['subtipo'], nuevo_evento[nombre]['recurso (S)']['subtipo'], 
-                      nuevo_evento[nombre]['recurso (O)']['subtipo']]
-        
+        tipos = [persona['subtipo'], servicio['subtipo'], objeto['subtipo']]
         mismo_tipo = tipos[0]
         for tipo in tipos:
             if mismo_tipo != tipo:
                 print('Los recursos principales del evento no son del mismo tipo')
                 return None
+            
+        fecha = seleccionar_fecha()
+        
+        nuevo_evento = {nombre: {'descripcion': descripcion, 'fecha': fecha,  'recurso (P)': persona, 
+                            'recurso (S)': servicio, 'recurso (O)': objeto }}
         
         ok = confirmar_evento(nuevo_evento)
         if ok:
@@ -59,12 +58,12 @@ def requisitos_evento():
 def borrar_evento(nombre=None):
     #Elimina un evento y permite utilizar sus recursos
     path = Path('eventos/eventos.json')
-    
-    if not nombre:
-        print('Escriba el nombre del evento que desea eliminar')
-        nombre = input('Nombre: ')  
         
     if path.exists():
+        if not nombre:
+            print('Escriba el nombre del evento que desea eliminar')
+            nombre = input('Nombre: ')  
+            
         eventos = path.read_text()
         eventos = json.loads(eventos)
         
@@ -73,9 +72,9 @@ def borrar_evento(nombre=None):
         except:
             print('No existe evento con ese nombre')
         else:
-            aumentar_recurso(eventos[nombre]['recurso (P)'])
-            aumentar_recurso(eventos[nombre]['recurso (S)'])
-            aumentar_recurso(eventos[nombre]['recurso (O)'])
+            sumar_restar_recurso(eventos[nombre]['recurso (P)'], 'mas')
+            sumar_restar_recurso(eventos[nombre]['recurso (S)'], 'mas')
+            sumar_restar_recurso(eventos[nombre]['recurso (O)'], 'mas')
         
             eventos.pop(nombre)
             eventos = json.dumps(eventos)
@@ -91,10 +90,10 @@ def ver_lista_eventos():
         eventos = json.loads(eventos)
 
         for nombre, evento in eventos.items():
-            print(f'\nFecha inicial: {evento['fecha'][0]}')
-            print(f'Fecha final: {evento['fecha'][1]}')
-            print(f'Nombre del evento: {nombre}')
+            print(f'\nNombre del evento: {nombre}')
             print(f'Descripcion: {evento['descripcion']}')
+            print(f'Fecha inicial: {evento['fecha'][0]}')
+            print(f'Fecha final: {evento['fecha'][1]}')
             print(f'Tipo: {evento['recurso (P)']['subtipo']}')
             print('Recursos: ')
             print(f'Persona: {evento['recurso (P)']['nombre']}')
@@ -104,6 +103,11 @@ def ver_lista_eventos():
         print('Actualmente no hay eventos ')
 
 def guardar_evento(nuevo_evento, nombre):
+    
+    sumar_restar_recurso(nuevo_evento[nombre]['recurso (P)'], 'menos')
+    sumar_restar_recurso(nuevo_evento[nombre]['recurso (S)'], 'menos')
+    sumar_restar_recurso(nuevo_evento[nombre]['recurso (O)'], 'menos')
+    
     path = Path('eventos/eventos.json')
     if path.exists():
         eventos = path.read_text()
@@ -114,10 +118,6 @@ def guardar_evento(nuevo_evento, nombre):
     else:
         nuevo_evento = json.dumps(nuevo_evento)
         path.write_text(nuevo_evento)
-        
-    aumentar_recurso(nuevo_evento[nombre]['recurso (P)'])
-    aumentar_recurso(nuevo_evento[nombre]['recurso (S)'])
-    aumentar_recurso(nuevo_evento[nombre]['recurso (O)'])
         
 def confirmar_evento(eventos):
     print('\nPresione (1) para guardar este evento o (2) para cancelar')
@@ -140,17 +140,19 @@ def confirmar_evento(eventos):
 
 def validar_eventos():
     path = Path('eventos/eventos.json')
-    eventos = path.read_text()
-    eventos = json.loads(eventos)
-    nombres = []
-    
-    for nombre, evento in eventos.items():
-        fecha = datetime.date.fromisoformat (evento['fecha'][1])
-        if fecha < datetime.date.today():
-            nombres.append(nombre)
-            
-    for nombre in nombres[::-1]:
-        borrar_evento(nombre)
+    if path.exists():
+        
+        eventos = path.read_text()
+        eventos = json.loads(eventos)
+        nombres = []
+
+        for nombre, evento in eventos.items():
+            fecha = datetime.date.fromisoformat (evento['fecha'][1])
+            if fecha < datetime.date.today():
+                nombres.append(nombre)
+
+        for nombre in nombres[::-1]:
+            borrar_evento(nombre)
     
 def crear_evento_inteligente():
     msg = 'El recurso especificado no existe. Evento cancelado'
@@ -169,21 +171,19 @@ def crear_evento_inteligente():
         print(msg)
         return None
     fecha = fecha_inteligente(persona, servicio, objeto)
-    
+        
     lista_de_recursos = [persona, servicio, objeto]
     persona, servicio, objeto = recursos_validos(lista_de_recursos)
+    tipos = [persona['subtipo'], servicio['subtipo'], objeto['subtipo']]
     
-    nuevo_evento = {nombre: {'descripcion': descripcion, 'fecha': fecha,  'recurso (P)': persona, 
-                            'recurso (S)': servicio, 'recurso (O)': objeto }}
-        
-    tipos = [nuevo_evento[nombre]['recurso (P)']['subtipo'], nuevo_evento[nombre]['recurso (S)']['subtipo'], 
-                      nuevo_evento[nombre]['recurso (O)']['subtipo']]
-        
     mismo_tipo = tipos[0]
     for tipo in tipos:
         if mismo_tipo != tipo:
             print('Los recursos principales del evento no son del mismo tipo')
             return None
+    
+    nuevo_evento = {nombre: {'descripcion': descripcion, 'fecha': fecha,  'recurso (P)': persona, 
+                            'recurso (S)': servicio, 'recurso (O)': objeto }}
         
     ok = confirmar_evento(nuevo_evento)
     if ok:

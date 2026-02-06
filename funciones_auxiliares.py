@@ -4,7 +4,7 @@ import os
 def while_opciones(element, *opciones):
     #Restringe las opciones para elegir
     while element not in opciones:
-        print('Opcion no valida')
+        print('Opcion no valida, escriba otra')
         element = input()
     return element
     
@@ -21,13 +21,11 @@ def while_int (num, inicio=None, fin=None):
     
     if type(inicio) == int:
         while num < inicio:
-            console_clear()
             print('Valor incorrecto')
             num = while_int(input('\nEscriba un nuevo numero: '), inicio)
             
     if type(fin) == int:
         while num > fin:
-            console_clear()
             print('Valor incorrecto')
             num = while_int(input('\nEscriba un nuevo numero: '), inicio)
     
