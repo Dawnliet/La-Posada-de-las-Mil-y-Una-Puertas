@@ -190,4 +190,3 @@ def crear_evento_inteligente():
         guardar_evento(nuevo_evento, nombre)
     else:
         print('No se ha guardado el evento')
-        

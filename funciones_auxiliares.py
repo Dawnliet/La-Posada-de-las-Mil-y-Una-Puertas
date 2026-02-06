@@ -80,11 +80,13 @@ def fecha_inteligente(*recursos):
     try:
         output_fecha = max(fechas)
     except:
-        fecha_inicial = str(datetime.date.today())
-        fecha_final = str(validar_fecha(fecha_inicial))
-        return (fecha_inicial, fecha_final)
+        fecha_inicial = datetime.date.today()
+        print('Fecha final:')
+        fecha_final = validar_fecha(fecha_inicial)
+        return (str(fecha_inicial), str(fecha_final))
     else:
         fecha_inicial = output_fecha + datetime.timedelta(days=1)
+        print('Fecha final:')
         fecha_final = validar_fecha(fecha_inicial)
-        return (fecha_inicial, fecha_final)
+        return (str(fecha_inicial), str(fecha_final))
             
