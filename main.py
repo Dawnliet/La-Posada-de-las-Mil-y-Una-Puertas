@@ -12,6 +12,7 @@ end = False
 
 while not end:
     validar_recursos()
+    validar_eventos()
     console_clear()
     core.pantalla_opciones_de_modo(modo)
     opcion = core.opciones_validas(modo)

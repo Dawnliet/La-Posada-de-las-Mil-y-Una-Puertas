@@ -79,6 +79,7 @@ def borrar_evento(nombre=None):
             eventos.pop(nombre)
             eventos = json.dumps(eventos)
             path.write_text(eventos)
+            print('Evento eliminado')
     else:
         print('No hay eventos para eliminar')
 
@@ -153,6 +154,10 @@ def validar_eventos():
 
         for nombre in nombres[::-1]:
             borrar_evento(nombre)
+        
+        
+        if not eventos :
+            path.unlink()
     
 def crear_evento_inteligente():
     msg = 'El recurso especificado no existe. Evento cancelado'
