@@ -1,12 +1,6 @@
 import funciones_auxiliares
-from recursos import crear_recurso
-from recursos import listar_recursos
-from eventos import crear_evento
-from eventos import requisitos_evento
-from eventos import ver_lista_eventos
-from eventos import borrar_evento
-from eventos import crear_evento_inteligente
-
+from recursos import crear_recurso, listar_recursos
+from eventos import crear_evento, requisitos_evento, ver_lista_eventos, borrar_evento, crear_evento_inteligente
 
 def pantalla_seleccion_modo():
     #Muestra los modos disponibles para acceder

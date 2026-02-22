@@ -2,15 +2,8 @@ import json
 import datetime
 from pathlib import Path
 
-from recursos import seleccionar_recursos_principales
-from recursos import sumar_restar_recurso
-from recursos import buscar_recurso_principal
-from recursos import recursos_validos
-from funciones_auxiliares import seleccionar_fecha
-from funciones_auxiliares import console_clear
-from funciones_auxiliares import while_opciones
-from funciones_auxiliares import no_encontrado
-from funciones_auxiliares import fecha_inteligente
+from recursos import seleccionar_recursos_principales, sumar_restar_recurso, buscar_recurso_principal, recursos_validos
+from funciones_auxiliares import seleccionar_fecha, console_clear, while_opciones, no_encontrado, fecha_inteligente
 
 def crear_evento(requisitos):
     

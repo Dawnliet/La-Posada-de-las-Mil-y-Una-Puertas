@@ -1,5 +1,6 @@
 import datetime
 import os
+import platform
 
 def while_opciones(element, *opciones):
     #Restringe las opciones para elegir
@@ -61,8 +62,11 @@ def validar_fecha(hoy=None):
     return fecha
          
 def console_clear():
-    os.system('cls')       
-  
+    sistema = platform.system()
+    if sistema == 'Windows':
+        os.system('cls')       
+    else:
+        os.system('clear')
 def no_encontrado(recurso):
     if not recurso:
         return True
